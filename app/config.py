@@ -1,8 +1,6 @@
 from fastapi import FastAPI
 from routers import courses, courseregister, presentedcourses, student, lecturer
 
-# from routers import student, lecturer, courses
-
 
 app = FastAPI()
 # app.include_router(student.router, tags=['students'])
