@@ -1,7 +1,7 @@
+from re import search, match
+from datetime import date
 from fastapi import HTTPException
 from persiantools.jdatetime import JalaliDate
-from datetime import date
-from re import search, match
 from database import student_collection, lecturer_collection, course_collection
 
 iran_city_list = [
