@@ -1,5 +1,7 @@
-# from motor.motor_asyncio import AsyncIOMotorClient
-# from motor.motor_asyncio import AsyncIOMotorDatabase
+"""
+Mongodb configuration settings
+"""
+
 from pymongo import MongoClient
 
 # MongoDB connection URL

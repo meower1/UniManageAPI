@@ -1,3 +1,8 @@
+"""
+Lecturer router
+includes CRUD operations related to lecturer table
+"""
+
 from fastapi import HTTPException, APIRouter
 import schemas.lecturer as schemas
 from datavalidation import DataValidation
@@ -27,7 +32,6 @@ async def create_Lecturer(lecturer: schemas.LecturerCreate):
     DataValidation.id_check(lecturer.id)
     await DataValidation.lcourseids_exist(lecturer.lcourseids)
 
-    # Beautifying the output
     lecturer_data = lecturer.model_dump()
     lecturer_collection.insert_one(lecturer_data)
 
@@ -40,8 +44,7 @@ async def delete_lecturer(lecturer_id: str):
     delete_record = lecturer_collection.find_one_and_delete({"lid": lecturer_id})
     if not delete_record:
         raise HTTPException(status_code=400, detail="Lecturer was not deleted")
-    else:
-        return {"Deleted": True}
+    return {"Lecturer ID": lecturer_id, "Deleted": True}
 
 
 @router.patch("/UpdLec/{lecturer_id}", response_model_exclude_unset=True)

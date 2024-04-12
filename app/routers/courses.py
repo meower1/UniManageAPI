@@ -1,3 +1,8 @@
+"""
+Courses router
+includes CRUD operations related to courses table
+"""
+
 from fastapi import HTTPException, APIRouter
 import schemas.courses as schemas
 from datavalidation import DataValidation
@@ -11,7 +16,7 @@ router = APIRouter()
 @router.post("/RegCou/", response_model=schemas.CoursesOut)
 async def create_courses(courses: schemas.CoursesCreate):
     """
-    Create a new student record
+    Create a new Course
     """
 
     await DataValidation.duplicate_cid_check(courses.cid, course_collection)
@@ -32,8 +37,7 @@ async def delete_courses(course_id: str):
     delete_record = course_collection.find_one_and_delete({"cid": course_id})
     if not delete_record:
         raise HTTPException(status_code=400, detail="Course was not deleted")
-    else:
-        return {"Deleted": True}
+    return {"Course ID": course_id, "Deleted": True}
 
 
 @router.patch("/UpdCou/{course_id}", response_model_exclude_unset=True)

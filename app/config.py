@@ -1,9 +1,12 @@
+"""
+Fastapi routers & database integration configs
+"""
+
 from fastapi import FastAPI
 from routers import courses, courseregister, presentedcourses, student, lecturer
 
 
 app = FastAPI()
-# app.include_router(student.router, tags=['students'])
 app.include_router(lecturer.router, tags=["lecturer"])
 app.include_router(student.router, tags=["student"])
 app.include_router(courses.router, tags=["courses"])

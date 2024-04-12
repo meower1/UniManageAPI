@@ -1,3 +1,8 @@
+"""
+Presented courses router
+includes CRUD operations related to presentedcourses table
+"""
+
 from fastapi import HTTPException, APIRouter
 import schemas.presentedcourses as schemas
 from datavalidation import DataValidation
@@ -36,8 +41,7 @@ async def delete_courses(course_id: str):
     delete_record = presentedcourses_collection.find_one_and_delete({"cid": course_id})
     if not delete_record:
         raise HTTPException(status_code=400, detail="Course was not deleted")
-    else:
-        return {"Deleted": True}
+    return {"Course ID": course_id, "Deleted": True}
 
 
 @router.patch("/UpdPreCou/{course_id}", response_model_exclude_unset=True)

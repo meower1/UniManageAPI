@@ -1,3 +1,9 @@
+"""
+Student router
+includes CRUD operations related to student table
+"""
+
+from typing import Any
 from fastapi import HTTPException, status, APIRouter
 import schemas.student as schemas
 from datavalidation import DataValidation
@@ -10,7 +16,16 @@ router = APIRouter()
 
 @router.post("/RegStu/", response_model=schemas.StudentOut)
 async def create_Student(student: schemas.StudentCreate):
+    """
+    Create a new student.
 
+    Args:
+        student (schemas.StudentCreate): The student data to be created.
+
+    Returns:
+        dict: The created student data.
+
+    """
     await DataValidation.duplicate_stid_check(student.stid)
     DataValidation.stid_check(student.stid)
     DataValidation.name_check(student.fname)
@@ -30,7 +45,6 @@ async def create_Student(student: schemas.StudentCreate):
     await DataValidation.student_lid_exists(student.lids)
     await DataValidation.student_course_exists(student.scourseids)
 
-    # Beautifying the output
     course_data = student.model_dump()
     student_collection.insert_one(course_data)
 
@@ -43,8 +57,7 @@ async def delete_student(student_id: str):
     delete_record = student_collection.find_one_and_delete({"stid": student_id})
     if not delete_record:
         raise HTTPException(status_code=400, detail="Student was not deleted")
-    else:
-        return {"Deleted": True}
+    return {"Student ID": student_id, "Deleted": True}
 
 
 @router.patch("/UpdStu/{student_id}", response_model_exclude_unset=True)

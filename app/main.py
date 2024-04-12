@@ -1,5 +1,9 @@
+"""
+Startup command for Local enviroment
+"""
+
 import uvicorn
-from config import app
+from config import app  # pylint: disable=unused-import
 
 
 if __name__ == "__main__":

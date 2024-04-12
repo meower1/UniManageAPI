@@ -396,7 +396,7 @@ def test_delete_student():
     # Test case for deleting a student
     response = client.delete("/DelStu/40211415035")
     assert response.status_code == 200
-    assert response.json() == {"Deleted": True}
+    assert response.json() == {"Student ID": 40211415035, "Deleted": True}
 
 
 def test_delete_nonexistent_student():
