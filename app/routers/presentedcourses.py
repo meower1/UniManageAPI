@@ -3,6 +3,7 @@ Presented courses router
 includes CRUD operations related to presentedcourses table
 """
 
+from typing import Any
 from fastapi import HTTPException, APIRouter
 import schemas.presentedcourses as schemas
 from datavalidation import DataValidation
@@ -14,14 +15,21 @@ router = APIRouter()
 
 
 @router.post("/RegPreCou/", response_model=schemas.PresentedCoursesOut)
-async def create_PresentedCourses(courses: schemas.PresentedCoursesCreate):
+async def create_presented_courses(
+    courses: schemas.PresentedCoursesCreate,
+) -> dict[str, Any]:
+    """
+    Create a new presented course.
 
+    Args:
+        courses (schemas.PresentedCoursesCreate): The data for the new presented course.
+
+    Returns:
+        dict[str, Any]: The created presented course data.
+    """
     await DataValidation.duplicate_cid_check(courses.cid, presentedcourses_collection)
     await DataValidation.cid_exists(courses.cid)
-
-    # Checks if presentedcourses.lid exists in LID's of lecturer table
     await DataValidation.student_lid_exists(courses.lid)
-
     DataValidation.cid_check(courses.cid)
     DataValidation.name_check_courses(courses.cname)
     DataValidation.department_check(courses.department)
@@ -36,8 +44,19 @@ async def create_PresentedCourses(courses: schemas.PresentedCoursesCreate):
 
 
 @router.delete("/DelPreCou/{course_id}", status_code=200)
-async def delete_courses(course_id: str):
+async def delete_courses(course_id: str) -> dict[str, Any]:
+    """
+    Delete a course by its ID.
 
+    Args:
+        course_id (str): The ID of the course to be deleted.
+
+    Returns:
+        dict: A dictionary containing the course ID and a flag indicating if the course was deleted successfully.
+
+    Raises:
+        HTTPException: If the course was not deleted.
+    """
     delete_record = presentedcourses_collection.find_one_and_delete({"cid": course_id})
     if not delete_record:
         raise HTTPException(status_code=400, detail="Course was not deleted")
@@ -45,7 +64,22 @@ async def delete_courses(course_id: str):
 
 
 @router.patch("/UpdPreCou/{course_id}", response_model_exclude_unset=True)
-async def update_course(course_id: str, course: schemas.PresentedCoursesUpdate):
+async def update_course(
+    course_id: str, course: schemas.PresentedCoursesUpdate
+) -> dict[str, Any]:
+    """
+    Update a course with the given course_id.
+
+    Args:
+        course_id (str): The ID of the course to be updated.
+        course (schemas.PresentedCoursesUpdate): The updated course data.
+
+    Returns:
+        dict: A dictionary containing the updated course ID and the updated values.
+
+    Raises:
+        HTTPException: If the course with the given course_id is not found.
+    """
 
     # Checks to see if cid exists
     db_course = presentedcourses_collection.find_one({"cid": course_id})
@@ -84,7 +118,19 @@ async def update_course(course_id: str, course: schemas.PresentedCoursesUpdate):
 
 
 @router.get("/GetPreCou/{course_id}", response_model=schemas.PresentedCoursesOut)
-async def get_courses(course_id: str):
+async def get_courses(course_id: str) -> dict[str, Any]:
+    """
+    Retrieve information about a presented course by its course ID.
+
+    Args:
+        course_id (str): The ID of the course to retrieve information for.
+
+    Returns:
+        dict: The information of the presented course.
+
+    Raises:
+        HTTPException: If the course ID is invalid and the course is not found.
+    """
     record = presentedcourses_collection.find_one({"cid": course_id})
     if not record:
         raise HTTPException(

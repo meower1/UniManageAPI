@@ -3,6 +3,7 @@ Lecturer router
 includes CRUD operations related to lecturer table
 """
 
+from typing import Any
 from fastapi import HTTPException, APIRouter
 import schemas.lecturer as schemas
 from datavalidation import DataValidation
@@ -14,8 +15,16 @@ router = APIRouter()
 
 
 @router.post("/RegLec/", response_model=schemas.LecturerOut)
-async def create_Lecturer(lecturer: schemas.LecturerCreate):
+async def create_lecturer(lecturer: schemas.LecturerCreate) -> dict[str, Any]:
+    """
+    Create a new lecturer.
 
+    Args:
+        lecturer (schemas.LecturerCreate): The data of the lecturer to be created.
+
+    Returns:
+        dict: The data of the created lecturer.
+    """
     await DataValidation.duplicate_lid_check(lecturer.lid)
     DataValidation.lid_check(lecturer.lid)
     DataValidation.name_check(lecturer.fname)
@@ -39,8 +48,19 @@ async def create_Lecturer(lecturer: schemas.LecturerCreate):
 
 
 @router.delete("/DelLec/{lecturer_id}", status_code=200)
-async def delete_lecturer(lecturer_id: str):
+async def delete_lecturer(lecturer_id: str) -> dict[str, Any]:
+    """
+    Delete a lecturer record from the database.
 
+    Args:
+        lecturer_id (str): The ID of the lecturer to be deleted.
+
+    Returns:
+        dict: A dictionary containing the lecturer ID and a flag indicating if the deletion was successful.
+
+    Raises:
+        HTTPException: If the lecturer was not found and deleted.
+    """
     delete_record = lecturer_collection.find_one_and_delete({"lid": lecturer_id})
     if not delete_record:
         raise HTTPException(status_code=400, detail="Lecturer was not deleted")
@@ -48,8 +68,22 @@ async def delete_lecturer(lecturer_id: str):
 
 
 @router.patch("/UpdLec/{lecturer_id}", response_model_exclude_unset=True)
-async def update_lecturer(lecturer_id: str, lecturer: schemas.LecturerUpdate):
+async def update_lecturer(
+    lecturer_id: str, lecturer: schemas.LecturerUpdate
+) -> dict[str, Any]:
+    """
+    Update a lecturer's information in the database.
 
+    Args:
+        lecturer_id (str): The ID of the lecturer to be updated.
+        lecturer (schemas.LecturerUpdate): The updated lecturer data.
+
+    Returns:
+        dict: A dictionary containing the updated lecturer ID and the updated values.
+
+    Raises:
+        HTTPException: If the lecturer with the given ID is not found in the database.
+    """
     # Checking if updated LID exists
     db_lecturer = lecturer_collection.find_one({"lid": lecturer_id})
     if not db_lecturer:
@@ -76,10 +110,11 @@ async def update_lecturer(lecturer_id: str, lecturer: schemas.LecturerUpdate):
         if getattr(lecturer, attr) is not None:
             validation_method(getattr(lecturer, attr))
 
-    # Duplicate lid check
+    # Checks for duplicate lid in the database
     await DataValidation.duplicate_lid_check(lecturer.lid)
 
-    # Checks to see if courses assigned to a lecturer exist in courses list after update
+    # Checks to see if courses assigned to a lecturer exist in courses list
+    # Inside the database after update
     if lecturer.lcourseids is not None:
         await DataValidation.lcourseids_exist(lecturer.lcourseids)
 
@@ -97,7 +132,19 @@ async def update_lecturer(lecturer_id: str, lecturer: schemas.LecturerUpdate):
 
 
 @router.get("/GetLec/{lecturer_id}", response_model=schemas.LecturerOut)
-async def get_lecturer(lecturer_id: str):
+async def get_lecturer(lecturer_id: str) -> dict[str, Any]:
+    """
+    Retrieve a lecturer by their ID.
+
+    Args:
+        lecturer_id (str): The ID of the lecturer to retrieve.
+
+    Returns:
+        dict: The details of the lecturer.
+
+    Raises:
+        HTTPException: If the lecturer with the given ID is not found.
+    """
     record = lecturer_collection.find_one({"lid": lecturer_id})
     if not record:
         raise HTTPException(

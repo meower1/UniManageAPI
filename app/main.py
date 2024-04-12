@@ -3,7 +3,7 @@ Startup command for Local enviroment
 """
 
 import uvicorn
-from config import app  # pylint: disable=unused-import
+from config import app  # pylint: disable=unused-import # noqa: F401
 
 
 if __name__ == "__main__":

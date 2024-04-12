@@ -4,7 +4,7 @@ includes CRUD operations related to student table
 """
 
 from typing import Any
-from fastapi import HTTPException, status, APIRouter
+from fastapi import HTTPException, APIRouter
 import schemas.student as schemas
 from datavalidation import DataValidation
 from database import student_collection
@@ -15,7 +15,7 @@ router = APIRouter()
 
 
 @router.post("/RegStu/", response_model=schemas.StudentOut)
-async def create_Student(student: schemas.StudentCreate):
+async def create_student(student: schemas.StudentCreate) -> dict[str, Any]:
     """
     Create a new student.
 
@@ -51,9 +51,20 @@ async def create_Student(student: schemas.StudentCreate):
     return course_data
 
 
-@router.delete("/DelStu/{student_id}", status_code=status.HTTP_200_OK)
+@router.delete("/DelStu/{student_id}", status_code=200)
 async def delete_student(student_id: str):
+    """
+    Delete a student record from the database.
 
+    Args:
+        student_id (str): The ID of the student to be deleted.
+
+    Returns:
+        dict: A dictionary containing the student ID and a flag indicating if the student was deleted successfully.
+
+    Raises:
+        HTTPException: If the student record was not found and deleted.
+    """
     delete_record = student_collection.find_one_and_delete({"stid": student_id})
     if not delete_record:
         raise HTTPException(status_code=400, detail="Student was not deleted")
@@ -61,7 +72,22 @@ async def delete_student(student_id: str):
 
 
 @router.patch("/UpdStu/{student_id}", response_model_exclude_unset=True)
-async def update_student(student_id: str, student: schemas.StudentUpdate):
+async def update_student(
+    student_id: str, student: schemas.StudentUpdate
+) -> dict[str, Any]:
+    """
+    Update a student's information in the database.
+
+    Args:
+        student_id (str): The ID of the student to be updated.
+        student (schemas.StudentUpdate): The updated student data.
+
+    Returns:
+        dict: A dictionary containing the student ID and the updated values.
+
+    Raises:
+        HTTPException: If the student is not found in the database.
+    """
     db_student = student_collection.find_one({"stid": student_id})
     if not db_student:
         raise HTTPException(status_code=404, detail="Student not found")
@@ -110,7 +136,19 @@ async def update_student(student_id: str, student: schemas.StudentUpdate):
 
 
 @router.get("/GetStu/{student_id}", response_model=schemas.StudentOut)
-async def get_student(student_id: str):
+async def get_student(student_id: str) -> dict[str, Any]:
+    """
+    Retrieve a student by their ID.
+
+    Args:
+        student_id (str): The ID of the student to retrieve.
+
+    Returns:
+        dict: The student record.
+
+    Raises:
+        HTTPException: If the student with the given ID is not found.
+    """
     record = student_collection.find_one({"stid": student_id})
     if not record:
         raise HTTPException(

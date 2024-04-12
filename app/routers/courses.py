@@ -3,6 +3,7 @@ Courses router
 includes CRUD operations related to courses table
 """
 
+from typing import Any
 from fastapi import HTTPException, APIRouter
 import schemas.courses as schemas
 from datavalidation import DataValidation
@@ -14,11 +15,23 @@ router = APIRouter()
 
 
 @router.post("/RegCou/", response_model=schemas.CoursesOut)
-async def create_courses(courses: schemas.CoursesCreate):
+async def create_courses(courses: schemas.CoursesCreate) -> dict[str, Any]:
     """
-    Create a new Course
-    """
+    Create a new course.
 
+    Args:
+        courses (schemas.CoursesCreate): The course data to be created.
+
+    Returns:
+        dict: The created course data.
+
+    Raises:
+        DuplicateCIDError: If the course ID already exists.
+        InvalidCIDError: If the course ID is invalid.
+        InvalidNameError: If the course name is invalid.
+        InvalidDepartmentError: If the department is invalid.
+        InvalidCreditError: If the credit value is invalid.
+    """
     await DataValidation.duplicate_cid_check(courses.cid, course_collection)
     DataValidation.cid_check(courses.cid)
     DataValidation.name_check_courses(courses.cname)
@@ -32,8 +45,19 @@ async def create_courses(courses: schemas.CoursesCreate):
 
 
 @router.delete("/DelCou/{course_id}", status_code=200)
-async def delete_courses(course_id: str):
+async def delete_courses(course_id: str) -> dict[str, Any]:
+    """
+    Delete a course from the database.
 
+    Args:
+        course_id (str): The ID of the course to be deleted.
+
+    Returns:
+        dict[str, Any]: A dictionary containing the course ID and a flag indicating if the course was deleted.
+
+    Raises:
+        HTTPException: If the course was not found and deleted.
+    """
     delete_record = course_collection.find_one_and_delete({"cid": course_id})
     if not delete_record:
         raise HTTPException(status_code=400, detail="Course was not deleted")
@@ -41,7 +65,22 @@ async def delete_courses(course_id: str):
 
 
 @router.patch("/UpdCou/{course_id}", response_model_exclude_unset=True)
-async def update_course(course_id: str, course: schemas.CoursesUpdate):
+async def update_course(
+    course_id: str, course: schemas.CoursesUpdate
+) -> dict[str, Any]:
+    """
+    Update a course with the given course_id.
+
+    Args:
+        course_id (str): The ID of the course to be updated.
+        course (schemas.CoursesUpdate): The updated course data.
+
+    Returns:
+        dict[str, Any]: A dictionary containing the updated course ID and the updated values.
+
+    Raises:
+        HTTPException: If the course with the given course_id is not found.
+    """
 
     course_exists = course_collection.find_one({"cid": course_id})
     if not course_exists:
@@ -76,7 +115,19 @@ async def update_course(course_id: str, course: schemas.CoursesUpdate):
 
 
 @router.get("/GetCou/{course_id}", response_model=schemas.CoursesOut)
-async def get_courses(course_id: str):
+async def get_courses(course_id: str) -> dict[str, Any]:
+    """
+    Retrieve a course by its ID.
+
+    Args:
+        course_id (str): The ID of the course to retrieve.
+
+    Returns:
+        dict[str, Any]: The course record.
+
+    Raises:
+        HTTPException: If the course with the given ID is not found.
+    """
     record = course_collection.find_one({"cid": course_id})
     if not record:
         raise HTTPException(

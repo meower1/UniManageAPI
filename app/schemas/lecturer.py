@@ -1,10 +1,26 @@
-from pydantic import BaseModel
-from typing import List
+"""
+Represents the schemas models for the Lecturer table
+"""
 
-# Pydantic is used for data validation in fastapi
+from typing import List
+from pydantic import BaseModel
 
 
 class LecturerBase(BaseModel):
+    """
+    Represents the base schema for a lecturer.
+
+    Attributes:
+        lid (str): The unique identifier for the lecturer.
+        fname (str): The first name of the lecturer.
+        lname (str): The last name of the lecturer.
+        department (str): The department the lecturer belongs to.
+        major (str): The major of the lecturer.
+        birth (str): The birth date of the lecturer.
+        borncity (str): The city where the lecturer was born.
+        lcourseids (List[int]): A list of course IDs associated with the lecturer.
+    """
+
     __tablename__ = "lecturer"
 
     lid: str
@@ -18,8 +34,16 @@ class LecturerBase(BaseModel):
 
 
 class LecturerCreate(LecturerBase):
-    # Sensitive information that are only needed
-    # for user creation
+    """
+    Represents a lecturer's information needed for user creation.
+
+    Attributes:
+        id (str): The ID of the lecturer.
+        address (str): The address of the lecturer.
+        postalcode (str): The postal code of the lecturer's address.
+        cphone (str): The contact phone number of the lecturer.
+        hphone (str): The home phone number of the lecturer.
+    """
 
     id: str
     address: str
@@ -29,8 +53,15 @@ class LecturerCreate(LecturerBase):
 
 
 class LecturerOut(BaseModel):
-    # Changed the class inheritance from LecturerBase to BaseModel
-    # Outputs the first 4 values of Lecturer table
+    """
+    Represents the output model for a lecturer.
+
+    Attributes:
+        lid (str): The lecturer's ID.
+        fname (str): The lecturer's first name.
+        lname (str): The lecturer's last name.
+        department (str): The lecturer's department.
+    """
 
     lid: str
     fname: str
@@ -39,6 +70,24 @@ class LecturerOut(BaseModel):
 
 
 class LecturerUpdate(LecturerCreate):
+    """
+    Represents the schema for updating a lecturer.
+
+    Attributes:
+        lid (str | None): The lecturer ID.
+        fname (str | None): The first name of the lecturer.
+        lname (str | None): The last name of the lecturer.
+        department (str | None): The department of the lecturer.
+        major (str | None): The major of the lecturer.
+        birth (str | None): The birth date of the lecturer.
+        borncity (str | None): The birth city of the lecturer.
+        lcourseids (List[int] | None): The list of course IDs associated with the lecturer.
+        id (str | None): The ID of the lecturer.
+        address (str | None): The address of the lecturer.
+        postalcode (str | None): The postal code of the lecturer.
+        cphone (str | None): The contact phone number of the lecturer.
+        hphone (str | None): The home phone number of the lecturer.
+    """
 
     lid: str | None = None
     fname: str | None = None

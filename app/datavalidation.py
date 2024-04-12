@@ -420,7 +420,7 @@ class DataValidation:
                     detail=f"Duplicate student courses id. scourseid: {scourseids}",
                 )
 
-    # --- Lecturer validation functions
+    # --- Lecturer validation functions --- #
 
     def lid_check(lid: str) -> None:
         """
@@ -455,7 +455,7 @@ class DataValidation:
                         detail=f"Invalid course id. Course id: {i} doesn't exist",
                     )
 
-    # --- Courses validation functions
+    # --- Courses validation functions --- #
 
     def cid_check(cid: str) -> None:
         """
