@@ -4,6 +4,8 @@ __pycache__/
 *.py[cod]
 *$py.class
 pylintrc
+.DS_Store
+fastapi_test.py.zip
 
 # C extensions
 *.so
