@@ -37,6 +37,7 @@ Lecturer_out = {
     "department": "علوم پایه",
 }
 
+
 Student_sample = {
     "stid": "40211415035",
     "fname": " میو ماو",
@@ -159,6 +160,51 @@ def test_create_presentedcourses() -> None:
     assert response.json() == Presentedcourses_out
 
 
+def test_get_course() -> None:
+    """
+    Test case for getting a course
+    """
+    response = client.get("/GetCou/12342")
+    assert response.status_code == 200
+    assert response.json() == Course_sample
+
+
+def test_get_lecturer() -> None:
+    """
+    Test case for getting a lecturer
+    """
+    response = client.get("/GetLec/777335")
+    assert response.status_code == 200
+    assert response.json() == Lecturer_sample
+
+
+def test_get_student() -> None:
+    """
+    Test case for getting a student
+    """
+    response = client.get("/GetStu/40211415035")
+    assert response.status_code == 200
+    assert response.json() == Student_sample
+
+
+def test_get_courseregister() -> None:
+    """
+    Test case for getting a course
+    """
+    response = client.get("/GetCouReg/12342")
+    assert response.status_code == 200
+    assert response.json() == Courseregister_sample
+
+
+def test_get_presentedcourses() -> None:
+    """
+    Test case for getting a course
+    """
+    response = client.get("/GetPreCou/12342")
+    assert response.status_code == 200
+    assert response.json() == Presentedcourses_sample
+
+
 def test_update_course() -> None:
     """
     Test case for updating a course
@@ -231,53 +277,3 @@ def test_update_presentedcourses() -> None:
         "cid": "12342",
         "Updated values:": [{"department": "فنی و مهندسی", "credit": "2"}],
     }
-
-
-def test_get_course() -> None:
-    """
-    Test case for getting a course
-    """
-    response = client.get("/GetCou/12342")
-    assert response.status_code == 200
-    assert response.json() == {
-        "cid": "12342",
-        "cname": "میوععع",
-        "department": "فنی و مهندسی",
-        "credit": "2",
-    }
-
-
-def test_get_lecturer() -> None:
-    """
-    Test case for getting a lecturer
-    """
-    response = client.get("/GetLec/777335")
-    assert response.status_code == 200
-    assert response.json() == Lecturer_out
-
-
-def test_get_student() -> None:
-    """
-    Test case for getting a student
-    """
-    response = client.get("/GetStu/40211415035")
-    assert response.status_code == 200
-    assert response.json() == Student_out
-
-
-def test_get_courseregister() -> None:
-    """
-    Test case for getting a course
-    """
-    response = client.get("/GetCouReg/12342")
-    assert response.status_code == 200
-    assert response.json() == Courseregister_updated
-
-
-def test_get_presentedcourses() -> None:
-    """
-    Test case for getting a course
-    """
-    response = client.get("/GetPreCou/12342")
-    assert response.status_code == 200
-    assert response.json() == Presentedcourses_updated

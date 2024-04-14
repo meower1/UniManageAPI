@@ -117,7 +117,7 @@ async def update_course(
     return response
 
 
-@router.get("/GetPreCou/{course_id}", response_model=schemas.PresentedCoursesOut)
+@router.get("/GetPreCou/{course_id}", response_model=schemas.PresentedCoursesUpdate)
 async def get_courses(course_id: str) -> dict[str, Any]:
     """
     Retrieve information about a presented course by its course ID.

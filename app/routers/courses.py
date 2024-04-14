@@ -114,7 +114,7 @@ async def update_course(
     return response
 
 
-@router.get("/GetCou/{course_id}", response_model=schemas.CoursesOut)
+@router.get("/GetCou/{course_id}", response_model=schemas.CoursesUpdate)
 async def get_courses(course_id: str) -> dict[str, Any]:
     """
     Retrieve a course by its ID.

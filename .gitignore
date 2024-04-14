@@ -1,11 +1,15 @@
+# meower1
+pylintrc
+.DS_Store
+fastapi_test.py.zip
+
+
 # Byte-compiled / optimized / DLL files
 .vscode/
 __pycache__/
 *.py[cod]
 *$py.class
-pylintrc
-.DS_Store
-fastapi_test.py.zip
+
 
 # C extensions
 *.so

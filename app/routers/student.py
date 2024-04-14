@@ -135,7 +135,7 @@ async def update_student(
     return response
 
 
-@router.get("/GetStu/{student_id}", response_model=schemas.StudentOut)
+@router.get("/GetStu/{student_id}", response_model=schemas.StudentUpdate)
 async def get_student(student_id: str) -> dict[str, Any]:
     """
     Retrieve a student by their ID.

@@ -131,7 +131,7 @@ async def update_lecturer(
     return response
 
 
-@router.get("/GetLec/{lecturer_id}", response_model=schemas.LecturerOut)
+@router.get("/GetLec/{lecturer_id}", response_model=schemas.LecturerUpdate)
 async def get_lecturer(lecturer_id: str) -> dict[str, Any]:
     """
     Retrieve a lecturer by their ID.
