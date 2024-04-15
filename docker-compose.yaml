@@ -16,6 +16,8 @@ services:
     command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
     ports:
       - 8080:8080
+    environment:
+      - PORT=8080
     volumes:
       - ./app:/code/
     depends_on:
@@ -24,16 +26,16 @@ services:
       - main
     restart: unless-stopped
 
-    nginx:
-      build: nginx
-      ports:
-        - 80:80
-        - 443:443
-      depends_on:
-        - fastapi
-      networks:
-        - main
-      restart: unless-stopped
+  nginx:
+    build: nginx
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - fastapi
+    networks:
+      - main
+    restart: unless-stopped
 
 networks:
   main:
