@@ -3,15 +3,22 @@ Courses router
 includes CRUD operations related to courses table
 """
 
-from typing import Any
-from fastapi import HTTPException, APIRouter
+from typing import Any, Optional
+from fastapi import Form, HTTPException, APIRouter, Request
+from pytest import TempPathFactory
 import schemas.courses as schemas
 from datavalidation import DataValidation
 from database import course_collection
 from pymongo import ReturnDocument
-
+from fastapi.templating import Jinja2Templates
 
 router = APIRouter()
+templates = Jinja2Templates(directory="app/templates")
+
+
+@router.get("/GetCou/")
+async def get_html(request: Request):
+    return templates.TemplateResponse(request=request, name="index.html")
 
 
 @router.post("/RegCou/", response_model=schemas.CoursesOut)
@@ -58,6 +65,7 @@ async def delete_courses(course_id: str) -> dict[str, Any]:
     Raises:
         HTTPException: If the course was not found and deleted.
     """
+
     delete_record = course_collection.find_one_and_delete({"cid": course_id})
     if not delete_record:
         raise HTTPException(status_code=400, detail="Course was not deleted")
@@ -115,7 +123,7 @@ async def update_course(
 
 
 @router.get("/GetCou/{course_id}", response_model=schemas.CoursesUpdate)
-async def get_courses(course_id: str) -> dict[str, Any]:
+async def get_courses(course_id: str, request: Request) -> dict[str, Any]:
     """
     Retrieve a course by its ID.
 
@@ -128,9 +136,63 @@ async def get_courses(course_id: str) -> dict[str, Any]:
     Raises:
         HTTPException: If the course with the given ID is not found.
     """
+
     record = course_collection.find_one({"cid": course_id})
+
     if not record:
         raise HTTPException(
             status_code=404, detail="Invalid course id. Course not found"
         )
+
     return record
+
+
+@router.get("/search_course")
+async def search_course(course_id: str, request: Request):
+
+    if not course_id:
+        raise HTTPException(status_code=404, detail="Invalid course id")
+
+    record = course_collection.find_one({"cid": course_id}, {"_id": 0})
+    return templates.TemplateResponse(
+        "get.html", {"request": request, "record": record}
+    )
+
+
+@router.get("/delete_course")
+async def delete_course_html(course_id: str, request: Request):
+
+    delete_record = course_collection.find_one_and_delete({"cid": course_id})
+    if not delete_record:
+        raise HTTPException(status_code=400, detail="Course was not deleted")
+
+    return {"detail": "Record has been deleted"}
+
+
+@router.post("/create_course_html")
+async def create_course_html(
+    request: Request,
+    course_id: str = Form(...),
+    cname: str = Form(...),
+    department: str = Form(...),
+    credit: str = Form(...),
+):
+    await DataValidation.duplicate_cid_check(course_id, course_collection)
+    DataValidation.cid_check(course_id)
+    DataValidation.name_check_courses(cname)
+    DataValidation.department_check(department)
+    DataValidation.credit_check(credit)
+    course_collection.insert_one(
+        {
+            "cid": course_id,
+            "cname": cname,
+            "department": department,
+            "credit": credit,
+        }
+    )
+
+    result = course_collection.find_one({"cid": course_id}, {"_id": 0})
+
+    return templates.TemplateResponse(
+        "get.html", {"request": request, "record": result}
+    )

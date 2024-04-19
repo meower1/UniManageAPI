@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Course</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='css/main.css') }}">
+    <!-- <a href="{{ request.url_for('static', path='/styles.css') }}" rel="stylesheet"></a> -->
+</head>
+<body>
+
+    {% if record %}
+    <table>
+        <tr>
+            <th>Course ID</th>
+            <th>Course Name</th>
+            <th>Course Department</th>
+            <th>Course Credit</th>
+            <!-- Add more columns as needed -->
+        </tr>
+        <tr>
+            <td>{{ record.cid }}</td>
+            <td>{{ record.cname }}</td>
+            <td>{{ record.department }}</td>
+            <td>{{ record.credit }}</td>
+            <!-- Add more cells as needed -->
+        </tr>
+    </table>
+    {% else %}
+    <h1>No record found.</h1>
+    {% endif %}
+
+
+</body>
+</html>
