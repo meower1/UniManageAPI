@@ -2,7 +2,6 @@
 Fastapi routers & database integration configs
 """
 
-from os import name
 from fastapi import FastAPI
 from routers import (
     courses,
@@ -12,11 +11,9 @@ from routers import (
     lecturer,
     front_page,
 )
-from fastapi.staticfiles import StaticFiles
 
 
 app = FastAPI()
-app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
 app.include_router(lecturer.router, tags=["lecturer"])

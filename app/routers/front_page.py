@@ -11,8 +11,4 @@ def home(request: Request):
     """
     Redirect the user to /docs when visiting the root path
     """
-    # return RedirectResponse("docs")
-    # return templates.TemplateResponse("layout.html", {"request": request})
-    return templates.TemplateResponse(
-        request=request, name="index.html", context={"meow": "meow"}
-    )
+    return templates.TemplateResponse(request=request, name="index.html")
