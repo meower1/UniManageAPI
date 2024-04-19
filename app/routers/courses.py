@@ -196,3 +196,25 @@ async def create_course_html(
     return templates.TemplateResponse(
         "get.html", {"request": request, "record": result}
     )
+
+
+@router.get("/get_course_update")
+async def get_course_update(course_id: str, request: Request):
+
+    record = course_collection.find_one({"cid": course_id}, {"_id": 0})
+
+    return templates.TemplateResponse(
+        "update.html", {"request": request, "course_id": course_id, "record": record}
+    )
+
+
+@router.post("/update_course_html")
+async def update_course_html(
+    request: Request,
+    course_id: str = Form(...),
+    cname: str = Form(...),
+    department: str = Form(...),
+    credit: str = Form(...),
+):
+    course_collection.find_one_and_delete({"cid": course_id})
+    return await create_course_html(request, course_id, cname, department, credit)
