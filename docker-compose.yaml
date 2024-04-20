@@ -19,7 +19,7 @@ services:
     environment:
       - PORT=8080
     volumes:
-      - ./app:/code/
+      - ./app:/app/
     depends_on:
       - mongo
     networks:
@@ -41,3 +41,4 @@ networks:
   main:
 volumes:
   mongodb:
+

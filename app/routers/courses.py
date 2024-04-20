@@ -13,7 +13,7 @@ from pymongo import ReturnDocument
 from fastapi.templating import Jinja2Templates
 
 router = APIRouter()
-templates = Jinja2Templates(directory="app/templates")
+templates = Jinja2Templates(directory="templates")
 
 
 @router.get("/GetCou/")
@@ -218,3 +218,4 @@ async def update_course_html(
 ):
     course_collection.find_one_and_delete({"cid": course_id})
     return await create_course_html(request, course_id, cname, department, credit)
+
