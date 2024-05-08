@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "unimanageapi"
+version = "0.1.0"
+description = ""
+authors = ["meower1 <109747197+meower1@users.noreply.github.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.110.2"
+motor = "^3.4.0"
+persiantools = "^4.0.0"
+pydantic = "^2.7.1"
+pymongo = "^4.7.0"
+uvicorn = "^0.29.0"
+pytz = "^2024.1"
+pytest = "^8.1.2"
+httpx = "^0.27.0"
+jinja2 = "^3.1.3"
+python-multipart = "^0.0.9"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
