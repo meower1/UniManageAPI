@@ -1,0 +1,44 @@
+version: "3.8"
+services:
+  mongo:
+    container_name: mongodb
+    image: mongo:latest
+    restart: unless-stopped
+    networks:
+      - main
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb:/var/lib/mongodb/data
+
+  fastapi:
+    build: .
+    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
+    ports:
+      - 8080:8080
+    environment:
+      - PORT=8080
+    volumes:
+      - ./app:/app/
+    depends_on:
+      - mongo
+    networks:
+      - main
+    restart: unless-stopped
+
+  # nginx:
+  #   build: nginx
+  #   ports:
+  #     - 80:80
+  #     - 443:443
+  #   depends_on:
+  #     - fastapi
+  #   networks:
+  #     - main
+  #   restart: unless-stopped
+
+networks:
+  main:
+    driver: bridge
+volumes:
+  mongodb:
